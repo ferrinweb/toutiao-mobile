@@ -7,7 +7,7 @@ import './styles/index.less'
 import Vant from 'vant'
 import 'vant/lib/index.css'
 
-// 自动设置rem基准值
+// 这个插件可以自动设置rem基准值
 import 'amfe-flexible'
 // 注册全局使用组件
 Vue.use(Vant)
