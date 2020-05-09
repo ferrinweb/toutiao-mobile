@@ -39,6 +39,7 @@
       type="primary"
       block
       class="login-btn"
+      @click="onLogin"
       >
       登录
       </van-button>
@@ -47,6 +48,7 @@
 </template>
 
 <script>
+import { login } from '@/api/user'
 export default {
   name: 'LoginIndex',
   data () {
@@ -57,7 +59,16 @@ export default {
       }
     }
   },
-  methods: {}
+  methods: {
+    async onLogin () {
+      try {
+        const res = await login(this.user)
+        console.log(res)
+      } catch {
+        console.log('登录失败')
+      }
+    }
+  }
 }
 </script>
 
