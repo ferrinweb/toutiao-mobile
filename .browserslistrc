@@ -1,3 +1,7 @@
-> 1%
-last 2 versions
-not dead
+# > 1%
+# last 2 versions
+# not dead
+# 这个文件的注释是用#号表示的
+
+Android >= 4.0
+iOS >= 8
