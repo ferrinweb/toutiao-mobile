@@ -113,11 +113,10 @@ export default {
       })
       try {
         const res = await login(this.user)
-        console.log(res)
-        // 将token存储在本地
-        window.localStorage.setItem('user', JSON.stringify(res.data.data))
-        // 跳转到首页
-        this.$router.push('/')
+        // 提交store容器中的setUser方法修改state中的user数据并且将token存储在本地
+        this.$store.commit('setUser', res.data.data)
+        // 跳转到我的页面
+        this.$router.push('/my')
         // 提示登录成功
         this.$toast.success('登录成功')
       } catch (err) {
@@ -138,6 +137,7 @@ export default {
         })
       }
     },
+    // 发送验证码的处理函数
     async onSendMs () {
       try {
         // 验证手机号
