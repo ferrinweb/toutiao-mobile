@@ -79,6 +79,12 @@ export default {
   },
   methods: {
     async onLogin () {
+      // 登录中的loading展示
+      this.$toast.loading({
+        message: '加载中...',
+        forbidClick: true,
+        duration: 0
+      })
       try {
         const res = await login(this.user)
         console.log(res)
@@ -90,9 +96,9 @@ export default {
         this.$toast.success('登录成功')
       } catch (err) {
         if (err.response.status === 400) {
-          this.$toast('用户名或验证码错误')
+          this.$toast.fail('用户名或验证码错误')
         } else {
-          this.$toast('登录失败,请稍后重试')
+          this.$toast.fail('登录失败,请稍后重试')
         }
       }
     }
