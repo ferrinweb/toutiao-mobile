@@ -8,13 +8,19 @@
       @click-left="$router.back()"
     />
     <!-- 表单部分 -->
-    <van-form @submit="onLogin">
+    <van-form
+    :show-error="false"
+    :show-error-message="false"
+    @submit="onLogin"
+    @failed="onValidateFailed"
+    >
       <van-field
         :rules="formRules.mobile"
         v-model="user.mobile"
         icon-prefix="toutiao"
         left-icon="shouji"
         type="number"
+        name="mobile"
         placeholder="请输入手机号"
       />
       <van-field
@@ -24,6 +30,7 @@
         icon-prefix="toutiao"
         left-icon="yanzhengma"
         type="number"
+        name="code"
         placeholder="请输入验证码"
       >
         <template #button>
@@ -64,20 +71,21 @@ export default {
       // 验证规则
       formRules: {
         mobile: [
-          { required: true },
+          { required: true, message: '请输入手机号' },
           {
             pattern: /^(13[0-9]|14[5|7]|15[0|1|2|3|4|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}$/,
             message: '手机号格式错误'
           }
         ],
         code: [
-          { required: true },
+          { required: true, message: '请输入验证码' },
           { pattern: /^\d{6}$/, message: '验证码格式错误' }
         ]
       }
     }
   },
   methods: {
+    // 验证通过请求登录的处理函数
     async onLogin () {
       // 登录中的loading展示
       this.$toast.loading({
@@ -100,6 +108,16 @@ export default {
         } else {
           this.$toast.fail('登录失败,请稍后重试')
         }
+      }
+    },
+    // 表单验证不通过的处理函数
+    onValidateFailed (err) {
+      // console.log(err)
+      if (err.errors[0]) {
+        this.$toast.fail({
+          message: err.errors[0].message,
+          position: 'top'
+        })
       }
     }
   }
