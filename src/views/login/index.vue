@@ -9,8 +9,10 @@
     />
     <!-- 表单部分 -->
     <van-form
+    ref="login-form"
     :show-error="false"
     :show-error-message="false"
+    validate-first
     @submit="onLogin"
     @failed="onValidateFailed"
     >
@@ -31,13 +33,25 @@
         left-icon="yanzhengma"
         type="number"
         name="code"
+        center
         placeholder="请输入验证码"
       >
+      <!-- 为了阻止这个发送验证码的按钮触发表单的提交,在click后面加上事件修饰符.prevent -->
         <template #button>
+          <!-- 倒计时 -->
+          <van-count-down
+          v-if="isShowCountDown"
+          :time="1000*60"
+          format="ss s"
+          @finish="isShowCountDown = false"
+          />
           <van-button
+          v-else
           size="small"
           type="primary"
           class="send-btn"
+          :loading="isShowLoading"
+          @click.prevent="onSendMs"
           >
           发送验证码
           </van-button>
@@ -58,7 +72,7 @@
 </template>
 
 <script>
-import { login } from '@/api/user'
+import { login, getCode } from '@/api/user'
 export default {
   name: 'LoginIndex',
   data () {
@@ -68,6 +82,10 @@ export default {
         mobile: '',
         code: ''
       },
+      // 发送验证码按钮是否展示loading
+      isShowLoading: false,
+      // 是否显示倒计时
+      isShowCountDown: false,
       // 验证规则
       formRules: {
         mobile: [
@@ -119,6 +137,34 @@ export default {
           position: 'top'
         })
       }
+    },
+    async onSendMs () {
+      try {
+        // 验证手机号
+        await this.$refs['login-form'].validate('mobile')
+        // 验证通过
+        // 展示loading
+        this.isShowLoading = true
+        // 请求短信验证码
+        await getCode(this.user.mobile)
+        // 展示倒计时
+        this.isShowCountDown = true
+      } catch (err) {
+        let message = ''
+        if (err && err.response && err.response.status === 429) {
+          message = '请求太频繁了,请稍后重试'
+        } else if (err && err.name === 'mobile') {
+          message = '请输入手机号'
+        } else {
+          message = '未知的错误'
+        }
+        this.$toast.fail({
+          message,
+          position: 'top'
+        })
+      }
+      // 不管验证通过还是未通过都需要关闭验证码的loading状态
+      this.isShowLoading = false
     }
   }
 }
