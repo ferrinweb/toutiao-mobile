@@ -103,7 +103,10 @@ export default {
         .then(() => {
           // 提交setUser清除用户token信息
           this.$store.commit('setUser', null)
-        }).catch(() => {})
+        })
+        .catch(() => {
+          // on cancel
+        })
     }
   }
 }

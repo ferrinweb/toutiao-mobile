@@ -116,7 +116,7 @@ export default {
         // 提交store容器中的setUser方法修改state中的user数据并且将token存储在本地
         this.$store.commit('setUser', res.data.data)
         // 跳转到我的页面
-        this.$router.push('/my')
+        this.$router.back()
         // 提示登录成功
         this.$toast.success('登录成功')
       } catch (err) {
