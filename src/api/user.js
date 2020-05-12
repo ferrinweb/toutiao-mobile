@@ -16,3 +16,10 @@ export const getCode = mobile => {
     url: `/app/v1_0/sms/codes/${mobile}`
   })
 }
+// 获取当前用户信息
+export const getCurrentUser = () => {
+  return request({
+    method: 'GET',
+    url: '/app/v1_0/user'
+  })
+}

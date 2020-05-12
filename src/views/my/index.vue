@@ -11,10 +11,10 @@
           round
           fit="cover"
           class="user-avatar"
-          src="https://img.yzcdn.cn/vant/cat.jpeg"
+          :src="currentUser.photo"
           />
         </span>
-        <span slot="title" class="user-name">用户名</span>
+        <span slot="title" class="user-name">{{currentUser.name}}</span>
         <van-button
         type="default"
         size="small"
@@ -30,32 +30,32 @@
       class="user-data-info">
       <van-grid-item>
         <div slot="text" class="user-data-item">
-          <div class="data">8</div>
+          <div class="data">{{currentUser.art_count}}</div>
           <div class="text">头条</div>
         </div>
       </van-grid-item>
       <van-grid-item class="user-data-item">
         <div slot="text">
-          <div class="data">888</div>
+          <div class="data">{{currentUser.follow_count}}</div>
           <div class="text">关注</div>
         </div>
       </van-grid-item>
       <van-grid-item class="user-data-item">
         <div slot="text">
-          <div class="data">666</div>
+          <div class="data">{{currentUser.fans_count}}</div>
           <div class="text">粉丝</div>
         </div>
       </van-grid-item>
       <van-grid-item class="user-data-item">
         <div slot="text">
-          <div class="data">999</div>
+          <div class="data">{{currentUser.like_count}}</div>
           <div class="text">获赞</div>
         </div>
       </van-grid-item>
     </van-grid>
     </van-cell-group>
     <!-- 未登录用户展示部分 -->
-    <div v-else class="no-login">
+    <div v-else class="no-login" @click="$router.push('/login')">
       <div class="avatar"><img src="./phone.png" /></div>
       <div class="text">登录/注册</div>
     </div>
@@ -67,21 +67,44 @@
     <!-- 页面导航部分 -->
     <van-cell title="消息通知" is-link to="/" class="message" />
     <van-cell title="小智同学" is-link to="/" class="xiaozhi mb-4" />
-    <van-cell v-if="user" title="退出登录" class="login-out" />
+    <van-cell v-if="user" title="退出登录" class="login-out" @click="loginOut" />
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
+import { getCurrentUser } from '@/api/user'
 export default {
   name: 'MyIndex',
   data () {
-    return {}
+    return {
+      currentUser: {} // 当前登录用户信息
+    }
   },
   computed: {
     ...mapState(['user'])
   },
   created () {
+    this.loaderCurrentUser()
+  },
+  methods: {
+    // 加载当前个人信息
+    async loaderCurrentUser () {
+      const { data: { data } } = await getCurrentUser()
+      // console.log(data)
+      this.currentUser = data
+    },
+    // 点击跳转到登录页面
+    loginOut () {
+      this.$dialog.confirm({
+        title: '提示信息',
+        message: '退出登录吗?'
+      })
+        .then(() => {
+          // 提交setUser清除用户token信息
+          this.$store.commit('setUser', null)
+        }).catch(() => {})
+    }
   }
 }
 </script>
