@@ -1,6 +1,6 @@
 <template>
   <div class="my-container">
-    <van-cell-group class="user-info">
+    <van-cell-group v-if="user" class="user-info">
       <!-- 用户个人信息部分 -->
       <van-cell
       :border="false"
@@ -54,6 +54,11 @@
       </van-grid-item>
     </van-grid>
     </van-cell-group>
+    <!-- 未登录用户展示部分 -->
+    <div v-else class="no-login">
+      <div class="avatar"><img src="./phone.png" /></div>
+      <div class="text">登录/注册</div>
+    </div>
     <!-- 收藏和历史部分 -->
     <van-grid :column-num="2" class="goto-looking-part mb-4">
       <van-grid-item class="part-item" icon-prefix="toutiao" icon="shoucang" text="收藏" />
@@ -62,13 +67,22 @@
     <!-- 页面导航部分 -->
     <van-cell title="消息通知" is-link to="/" class="message" />
     <van-cell title="小智同学" is-link to="/" class="xiaozhi mb-4" />
-    <van-cell title="退出登录" class="login-out" />
+    <van-cell v-if="user" title="退出登录" class="login-out" />
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
-  name: 'MyIndex'
+  name: 'MyIndex',
+  data () {
+    return {}
+  },
+  computed: {
+    ...mapState(['user'])
+  },
+  created () {
+  }
 }
 </script>
 
@@ -123,6 +137,26 @@ export default {
         color: #ffffff;
       }
     }
+  }
+}
+// 未登录展示的部分
+.no-login{
+  background: url(./bg.png) no-repeat;
+  background-size: cover;
+  box-sizing: border-box;
+  height: 173px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  .avatar img{
+    width: 66px;
+    height: 66px;
+  }
+  .text{
+    font-size: 14px;
+    color: #fff;
+    margin-top: 4px;
   }
 }
 // 用户收藏和历史部分
