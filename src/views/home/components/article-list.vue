@@ -4,21 +4,23 @@
         v-model="loading"
         :finished="finished"
         finished-text="没有更多了"
-        @load="onLoad"
+        @load="onLoadArticles"
         >
-        <van-cell v-for="item in list" :key="item" :title="item" />
+        <van-cell v-for="(article, index) in articles" :key="index" :title="article.title" />
         </van-list>
   </div>
 </template>
 
 <script>
+import { getArticles } from '@/api/article'
 export default {
   name: 'ArticleList',
   data () {
     return {
-      list: [],
+      articles: [],
       loading: false,
-      finished: false
+      finished: false,
+      timestamp: null
     }
   },
   props: {
@@ -28,22 +30,39 @@ export default {
     }
   },
   methods: {
-    onLoad () {
+    async onLoadArticles () {
+      // 1.封装数据接口
+      // 2.请求获取数据
+      const { data: { data } } = await getArticles({
+        channel_id: this.channel.id,
+        timestamp: this.timestamp || Date.now(),
+        with_top: 1
+      })
+      const results = data.results
+      this.articles.push(...results)
+      // 3.加载状态结束
+      this.loading = false
+      // 4.数据全部加载完成
+      if (results.length) {
+        this.timestamp = data.pre_timestamp
+      } else {
+        this.finished = true
+      }
       // 异步更新数据
       // setTimeout 仅做示例，真实场景中一般为 ajax 请求
-      setTimeout(() => {
-        for (let i = 0; i < 10; i++) {
-          this.list.push(this.list.length + 1)
-        }
+      // setTimeout(() => {
+      //   for (let i = 0; i < 10; i++) {
+      //     this.list.push(this.list.length + 1)
+      //   }
 
-        // 加载状态结束
-        this.loading = false
+      //   // 加载状态结束
+      //   this.loading = false
 
-        // 数据全部加载完成
-        if (this.list.length >= 40) {
-          this.finished = true
-        }
-      }, 1000)
+      //   // 数据全部加载完成
+      //   if (this.list.length >= 40) {
+      //     this.finished = true
+      //   }
+      // }, 1000)
     }
   }
 }

@@ -31,7 +31,7 @@ export default {
   name: 'HomeIndex',
   data () {
     return {
-      active: 2,
+      active: 0,
       channels: [] // 用户的频道列表
     }
   },
