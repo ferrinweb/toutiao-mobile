@@ -50,6 +50,7 @@ export default {
 
 <style scoped lang="less">
 .home-container{
+  // 头部搜索区域
   /deep/.van-nav-bar__title{
     max-width: 80%;
     .search-btn{
@@ -70,6 +71,21 @@ export default {
         font-size: 14px;
       }
     }
+  }
+  // tab切换部分
+  /deep/ .van-tab{
+    height: 41px;
+    color: #777;
+    border-right: 1px solid #edeff3;
+  }
+  /deep/ .van-tab--active span{
+    color: #333;
+  }
+  /deep/ .van-tabs__line{
+    width: 15px !important;
+    height: 3px;
+    background-color: #3296fa;
+    bottom: 20px;
   }
 }
 </style>
