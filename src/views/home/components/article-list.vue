@@ -12,13 +12,21 @@
         finished-text="没有更多了"
         @load="onLoadArticles"
         >
-        <van-cell v-for="(article, index) in articles" :key="index" :title="article.title" />
+        <article-item
+        :key="index"
+        :article="article"
+        v-for="(article, index) in articles"
+        >
+        </article-item>
+        <!-- <van-cell v-for="(article, index) in articles" :key="index" :title="article.title" /> -->
       </van-list>
     </van-pull-refresh>
   </div>
 </template>
 
 <script>
+// 引入文章列表项组件
+import ArticleItem from '@/components/article-item'
 import { getArticles } from '@/api/article'
 export default {
   name: 'ArticleList',
@@ -32,6 +40,7 @@ export default {
       successText: '' // 刷新成功提示文本
     }
   },
+  components: { ArticleItem },
   props: {
     channel: {
       type: Object,
