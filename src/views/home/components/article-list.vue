@@ -25,8 +25,8 @@ export default {
   data () {
     return {
       articles: [],
-      loading: false,
-      finished: false,
+      loading: false, // 上拉加载更多的loading
+      finished: false, // 上拉是否加载完毕
       timestamp: null, // 时间戳
       isRefleshLoading: false, // 上拉刷新加载中
       successText: '' // 刷新成功提示文本
