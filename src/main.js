@@ -14,6 +14,9 @@ import 'amfe-flexible'
 // 导入自己全局的样式(放在后面的原因:自己的样式可覆盖第三方插件的样式)
 import './styles/index.less'
 
+// 在全局导入时间过滤文件
+import '@/utils/dayjs'
+
 // 注册全局使用组件
 Vue.use(Vant)
 
