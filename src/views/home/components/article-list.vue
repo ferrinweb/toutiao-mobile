@@ -1,5 +1,11 @@
 <template>
   <div class="article-list">
+    <van-pull-refresh
+    v-model="isRefleshLoading"
+    :success-text="successText"
+    :success-duration="1500"
+    @refresh="onRefresh"
+    >
       <van-list
         v-model="loading"
         :finished="finished"
@@ -7,7 +13,8 @@
         @load="onLoadArticles"
         >
         <van-cell v-for="(article, index) in articles" :key="index" :title="article.title" />
-        </van-list>
+      </van-list>
+    </van-pull-refresh>
   </div>
 </template>
 
@@ -20,7 +27,9 @@ export default {
       articles: [],
       loading: false,
       finished: false,
-      timestamp: null
+      timestamp: null, // 时间戳
+      isRefleshLoading: false, // 上拉刷新加载中
+      successText: '' // 刷新成功提示文本
     }
   },
   props: {
@@ -34,9 +43,9 @@ export default {
       // 1.封装数据接口
       // 2.请求获取数据
       const { data: { data } } = await getArticles({
-        channel_id: this.channel.id,
-        timestamp: this.timestamp || Date.now(),
-        with_top: 1
+        channel_id: this.channel.id, // 频道id
+        timestamp: this.timestamp || Date.now(), // 时间戳，请求新的推荐数据传当前的时间戳，请求历史推荐传指定的时间戳
+        with_top: 1 // 是否包含置顶
       })
       const results = data.results
       this.articles.push(...results)
@@ -44,25 +53,28 @@ export default {
       this.loading = false
       // 4.数据全部加载完成
       if (results.length) {
+        // 如果还有数据,就把timestamp修改成这次请求结果中的pre_timestamp,代表前一页的数据
         this.timestamp = data.pre_timestamp
       } else {
+        // 如果results的长度是0,进入这个区间,说明没有数据了
         this.finished = true
       }
-      // 异步更新数据
-      // setTimeout 仅做示例，真实场景中一般为 ajax 请求
-      // setTimeout(() => {
-      //   for (let i = 0; i < 10; i++) {
-      //     this.list.push(this.list.length + 1)
-      //   }
-
-      //   // 加载状态结束
-      //   this.loading = false
-
-      //   // 数据全部加载完成
-      //   if (this.list.length >= 40) {
-      //     this.finished = true
-      //   }
-      // }, 1000)
+    },
+    async onRefresh () {
+      // 请求获取数据
+      const { data: { data } } = await getArticles({
+        channel_id: this.channel.id, // 频道id
+        timestamp: Date.now(), // 时间戳,获取最新的数据
+        with_top: 1 // 是否包含置顶
+      })
+      // console.log(data)
+      const results = data.results
+      // 将获取到最新的数据添加到文章列表的最前面
+      this.articles.unshift(...results)
+      // 关闭加载中
+      this.isRefleshLoading = false
+      // 提示刷新成功
+      this.successText = `刷新成功,更新了${results.length}条数据` // 修改刷新成功提示文本
     }
   }
 }
