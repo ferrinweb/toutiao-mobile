@@ -54,9 +54,11 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import ChannelEdit from './components/channel-edit'
 import ArticleList from './components/article-list'
 import { getChannels } from '@/api/user'
+import { getItem } from '@/utils/storage'
 export default {
   name: 'HomeIndex',
   data () {
@@ -70,10 +72,28 @@ export default {
   created () {
     this.onGetChannels()
   },
+  computed: {
+    ...mapState(['user'])
+  },
   methods: {
+    // 获取频道
     async onGetChannels () {
-      const { data: { data } } = await getChannels()
-      this.channels = data.channels
+      let channels = []
+      const storageChannels = getItem('channels')
+      if (this.user) {
+        // 如果是登录状态,那么获取服务器上存储的用户频道
+        const { data: { data } } = await getChannels()
+        channels = data.channels
+      } else if (storageChannels) {
+        // 如果本地存储中有数据,那么获取本地存储的
+        channels = storageChannels
+      } else {
+        // 如果用户没有登录,而且本地存储中也没有,那么获取后台推荐的频道,跟用户频道获取听一个接口,只不过未登录就没有传token,所以获取的数据不一样
+        const { data: { data } } = await getChannels()
+        channels = data.channels
+      }
+      // 将数据更新到视图中
+      this.channels = channels
     }
   }
 }
