@@ -15,9 +15,9 @@
         :key="index"
         class="channel-item"
       >
-      <div slot="text" class="channel-text">
-        {{channel.name}}
-      </div>
+        <div slot="text" class="channel-text">
+          {{channel.name}}
+        </div>
       </van-grid-item>
     </van-grid>
     <!-- 频道推荐部分 -->
@@ -25,25 +25,40 @@
     <!-- 展示的频道推荐 -->
     <van-grid :gutter="10">
       <van-grid-item
-        v-for="value in 8"
-        :key="value"
-        text="文字"
+        v-for="(channel, index) in allChannels"
+        :key="index"
         class="channel-item"
-      />
+      >
+        <div slot="text" class="channel-text">
+          {{channel.name}}
+        </div>
+      </van-grid-item>
     </van-grid>
   </div>
 </template>
 
 <script>
+import { getAllChannels } from '@/api/channel'
 export default {
   name: 'ChannelEdit',
   data () {
-    return {}
+    return {
+      allChannels: [] // 所有频道列表
+    }
   },
   props: {
     userChannels: {
       type: Array,
       required: true
+    }
+  },
+  created () {
+    this.onLoadAllChannels()
+  },
+  methods: {
+    async onLoadAllChannels () {
+      const { data: { data } } = await getAllChannels()
+      this.allChannels = data.channels
     }
   }
 }
