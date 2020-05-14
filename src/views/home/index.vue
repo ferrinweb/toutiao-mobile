@@ -47,6 +47,7 @@
       :channel-active="active"
       @close="isShowPopup = false"
       @to-current-channel="active = $event"
+      @change-active="active -= $event"
     />
     </van-popup>
   </div>

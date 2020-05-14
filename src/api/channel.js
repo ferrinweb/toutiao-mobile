@@ -15,3 +15,10 @@ export const editUserChannels = data => {
     data
   })
 }
+// 删除频道的请求
+export const deleteUserChannels = channelId => {
+  return request({
+    method: 'DELETE',
+    url: `/app/v1_0/user/channels/${channelId}`
+  })
+}

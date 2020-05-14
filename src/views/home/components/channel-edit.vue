@@ -44,7 +44,7 @@
 <script>
 import { mapState } from 'vuex'
 import { setItem } from '@/utils/storage'
-import { getAllChannels, editUserChannels } from '@/api/channel'
+import { getAllChannels, editUserChannels, deleteUserChannels } from '@/api/channel'
 export default {
   name: 'ChannelEdit',
   data () {
@@ -104,11 +104,29 @@ export default {
     // 用户频道部分的点击
     onUserChannelClick (channel, index) {
       if (this.isEdit) {
+        // 注意第一个频道推荐频道是不能删的
+        if (index === 0) {
+          return
+        }
+        if (index <= this.channelActive) {
+          this.$emit('change-active', 1)
+        }
         // 如果是编辑状态,那么就是删除频道
+        // 要在视图上做出改变
+        this.userChannels.splice(index, 1)
+        this.onDeleteChannels(channel)
       } else {
         // 如果是非编辑状态就是关闭弹层跳转到首页对应的当前频道
         this.$emit('close')
         this.$emit('to-current-channel', index)
+      }
+    },
+    async onDeleteChannels (channel) {
+      if (this.user) {
+        await deleteUserChannels(channel.id)
+      } else {
+        // 如果是未登录状态,那么将用户的频道存储到本地
+        setItem('channels', this.userChannels)
       }
     }
   }
