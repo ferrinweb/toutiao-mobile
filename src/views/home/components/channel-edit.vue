@@ -11,11 +11,14 @@
     <!-- 展示的用户频道 -->
     <van-grid :gutter="10">
       <van-grid-item
-        v-for="value in 8"
-        :key="value"
-        text="文字"
+        v-for="(channel, index) in userChannels"
+        :key="index"
         class="channel-item"
-      />
+      >
+      <div slot="text" class="channel-text">
+        {{channel.name}}
+      </div>
+      </van-grid-item>
     </van-grid>
     <!-- 频道推荐部分 -->
     <van-cell title="频道推荐" class="title" />
@@ -33,7 +36,16 @@
 
 <script>
 export default {
-  name: 'ChannelEdit'
+  name: 'ChannelEdit',
+  data () {
+    return {}
+  },
+  props: {
+    userChannels: {
+      type: Array,
+      required: true
+    }
+  }
 }
 </script>
 
@@ -49,7 +61,7 @@ export default {
       width: 80px;
       height: 43px;
       background-color: #f4f5f6;
-      .van-grid-item__text{
+      .channel-text{
         font-size: 14px;
         color: #222;
       }
