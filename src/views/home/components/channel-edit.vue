@@ -6,7 +6,8 @@
         plain
         size="mini"
         round
-      >编辑</van-button>
+        @click="isEdit = !isEdit"
+      >{{isEdit? '完成' : '编辑'}}</van-button>
     </van-cell>
     <!-- 展示的用户频道 -->
     <van-grid :gutter="10">
@@ -18,6 +19,7 @@
         <div slot="text" class="channel-text">
           {{channel.name}}
         </div>
+        <van-icon v-show="isEdit && index !== 0" slot="icon" name="clear" class="close" />
       </van-grid-item>
     </van-grid>
     <!-- 频道推荐部分 -->
@@ -43,7 +45,8 @@ export default {
   name: 'ChannelEdit',
   data () {
     return {
-      allChannels: [] // 所有频道列表
+      allChannels: [], // 所有频道列表
+      isEdit: false
     }
   },
   props: {
@@ -79,6 +82,15 @@ export default {
       .channel-text{
         font-size: 14px;
         color: #222;
+      }
+      /deep/ .van-grid-item__icon-wrapper{
+        width: 16px;
+        height: 16px;
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        color: #ccc;
+        font-size: 16px;
       }
     }
   }
