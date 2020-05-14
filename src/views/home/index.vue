@@ -20,6 +20,8 @@
       <van-tab v-for="channel in channels" :key="channel.id" :title="channel.name">
         <article-list :channel="channel"></article-list>
       </van-tab>
+      <!-- 占位的盒子 -->
+      <div slot="nav-right" class="nav-right-empty"></div>
       <!-- 汉堡按钮 -->
       <div
         slot="nav-right"
@@ -109,6 +111,13 @@ export default {
     height: 3px;
     background-color: #3296fa;
     bottom: 22px;
+  }
+  // 占位的空盒子
+  /deep/ .nav-right-empty{
+    width: 33px;
+    height: 40px;
+    background-color: #ffffff;
+    flex-shrink: 0; // 不参与父盒子的flex均分
   }
   // 汉堡菜单图标
   .wap-nav-wrap{
