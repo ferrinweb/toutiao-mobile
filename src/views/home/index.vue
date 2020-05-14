@@ -42,7 +42,12 @@
       position="bottom"
       :style="{ height: '100%' }"
     >
-    <channel-edit :user-channels="channels" />
+    <channel-edit
+      :user-channels="channels"
+      :channel-active="active"
+      @close="isShowPopup = false"
+      @to-current-channel="active = $event"
+    />
     </van-popup>
   </div>
 </template>
@@ -57,7 +62,7 @@ export default {
     return {
       active: 0,
       channels: [], // 用户的频道列表
-      isShowPopup: true // 是否显示弹层
+      isShowPopup: false // 是否显示弹层
     }
   },
   components: { ArticleList, ChannelEdit },

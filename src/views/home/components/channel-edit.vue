@@ -15,8 +15,9 @@
         v-for="(channel, index) in userChannels"
         :key="index"
         class="channel-item"
+        @click="onUserChannelClick(channel, index)"
       >
-        <div slot="text" class="channel-text">
+        <div slot="text" class="channel-text" :class="{active: index === channelActive}">
           {{channel.name}}
         </div>
         <van-icon v-show="isEdit && index !== 0" slot="icon" name="clear" class="close" />
@@ -55,6 +56,10 @@ export default {
   props: {
     userChannels: {
       type: Array,
+      required: true
+    },
+    channelActive: {
+      type: Number,
       required: true
     }
   },
@@ -95,6 +100,16 @@ export default {
         // 如果是未登录状态,那么将用户的频道存储到本地
         setItem('channels', this.userChannels)
       }
+    },
+    // 用户频道部分的点击
+    onUserChannelClick (channel, index) {
+      if (this.isEdit) {
+        // 如果是编辑状态,那么就是删除频道
+      } else {
+        // 如果是非编辑状态就是关闭弹层跳转到首页对应的当前频道
+        this.$emit('close')
+        this.$emit('to-current-channel', index)
+      }
     }
   }
 }
@@ -115,6 +130,10 @@ export default {
       .channel-text{
         font-size: 14px;
         color: #222;
+      }
+      // 控制当前频道高亮显示的样式
+      .active{
+        color: red;
       }
       /deep/ .van-grid-item__icon-wrapper{
         width: 16px;
