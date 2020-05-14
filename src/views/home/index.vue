@@ -5,11 +5,11 @@
       class="nav-bar"
     >
       <van-button
-      round
-      size="small"
-      type="info"
-      slot="title"
-      class="search-btn"
+        round
+        size="small"
+        type="info"
+        slot="title"
+        class="search-btn"
       >
       <van-icon name="search" />
       <span class="text">搜索</span>
@@ -20,6 +20,12 @@
       <van-tab v-for="channel in channels" :key="channel.id" :title="channel.name">
         <article-list :channel="channel"></article-list>
       </van-tab>
+      <!-- 汉堡按钮 -->
+      <div slot="nav-right" class="wap-nav-wrap">
+        <van-icon
+          name="wap-nav"
+        />
+      </div>
     </van-tabs>
   </div>
 </template>
@@ -85,7 +91,28 @@ export default {
     width: 15px !important;
     height: 3px;
     background-color: #3296fa;
-    bottom: 20px;
+    bottom: 22px;
+  }
+  // 汉堡菜单图标
+  .wap-nav-wrap{
+    position: fixed;
+    right: 0;
+    width: 33px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffffff;
+    opacity: 0.8;
+    &::before{
+      content: '';
+      position: absolute;
+      left: 0;
+      width: 1px;
+      height: 40px;
+      background: url(./linebg.png) no-repeat;
+      background-size: contain;
+    }
   }
 }
 </style>
