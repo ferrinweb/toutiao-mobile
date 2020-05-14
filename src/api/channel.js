@@ -7,3 +7,11 @@ export const getAllChannels = () => {
     url: '/app/v1_0/channels'
   })
 }
+// 添加用户频道的请求
+export const editUserChannels = data => {
+  return request({
+    method: 'PATCH',
+    url: '/app/v1_0/user/channels',
+    data
+  })
+}

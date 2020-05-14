@@ -27,9 +27,10 @@
     <!-- 展示的频道推荐 -->
     <van-grid :gutter="10">
       <van-grid-item
-        v-for="(channel, index) in allChannels"
+        v-for="(channel, index) in recommendChannels"
         :key="index"
         class="channel-item"
+        @click="addChannel(channel,index)"
       >
         <div slot="text" class="channel-text">
           {{channel.name}}
@@ -40,7 +41,9 @@
 </template>
 
 <script>
-import { getAllChannels } from '@/api/channel'
+import { mapState } from 'vuex'
+import { setItem } from '@/utils/storage'
+import { getAllChannels, editUserChannels } from '@/api/channel'
 export default {
   name: 'ChannelEdit',
   data () {
@@ -58,10 +61,40 @@ export default {
   created () {
     this.onLoadAllChannels()
   },
+  computed: {
+    ...mapState(['user']),
+    // 获取推荐频道(所有频道中除了用户频道的频道)
+    recommendChannels () {
+      return this.allChannels.filter(channel => {
+        return !this.userChannels.find(value => {
+          return channel.id === value.id
+        })
+      })
+    }
+  },
   methods: {
+    // 加载所有频道的处理函数
     async onLoadAllChannels () {
       const { data: { data } } = await getAllChannels()
       this.allChannels = data.channels
+    },
+    // 添加频道的处理函数
+    async addChannel (channel, index) {
+      // 添加频道
+      this.userChannels.push(channel)
+      // 判断用户是否登录
+      if (this.user) {
+        // 如果用户处于登录状态,请求添加频道
+        await editUserChannels({
+          channels: [{
+            id: channel.id,
+            seq: this.userChannels.length
+          }]
+        })
+      } else {
+        // 如果是未登录状态,那么将用户的频道存储到本地
+        setItem('channels', this.userChannels)
+      }
     }
   }
 }
