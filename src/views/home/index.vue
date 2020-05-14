@@ -21,16 +21,32 @@
         <article-list :channel="channel"></article-list>
       </van-tab>
       <!-- 汉堡按钮 -->
-      <div slot="nav-right" class="wap-nav-wrap">
+      <div
+        slot="nav-right"
+        class="wap-nav-wrap"
+        @click="isShowPopup = !isShowPopup"
+      >
         <van-icon
           name="wap-nav"
         />
       </div>
     </van-tabs>
+    <!-- 弹层 -->
+    <!-- 图标位置 -->
+    <van-popup
+      v-model="isShowPopup"
+      closeable
+      close-icon-position="top-left"
+      position="bottom"
+      :style="{ height: '100%' }"
+    >
+    <channel-edit />
+    </van-popup>
   </div>
 </template>
 
 <script>
+import ChannelEdit from './components/channel-edit'
 import ArticleList from './components/article-list'
 import { getChannels } from '@/api/user'
 export default {
@@ -38,10 +54,11 @@ export default {
   data () {
     return {
       active: 0,
-      channels: [] // 用户的频道列表
+      channels: [], // 用户的频道列表
+      isShowPopup: false // 是否显示弹层
     }
   },
-  components: { ArticleList },
+  components: { ArticleList, ChannelEdit },
   created () {
     this.onGetChannels()
   },
