@@ -79,20 +79,21 @@ export default {
     // 获取频道
     async onGetChannels () {
       let channels = []
-      const storageChannels = getItem('channels')
       if (this.user) {
-        // 如果是登录状态,那么获取服务器上存储的用户频道
+        // 如果用户登录了,请求从服务器获取用户频道数据
         const { data: { data } } = await getChannels()
         channels = data.channels
-      } else if (storageChannels) {
-        // 如果本地存储中有数据,那么获取本地存储的
-        channels = storageChannels
       } else {
-        // 如果用户没有登录,而且本地存储中也没有,那么获取后台推荐的频道,跟用户频道获取听一个接口,只不过未登录就没有传token,所以获取的数据不一样
-        const { data: { data } } = await getChannels()
-        channels = data.channels
+        // 如果用户未登录,本地存储有频道信息,那么获取本地存储的
+        const localChannels = getItem('channels')
+        if (localChannels) {
+          channels = localChannels
+        } else {
+          // 如果用户未登录并且本地存储没有频道信息,那么也发送请求获取服务器中推荐的频道(如果用户未登录,这个接口返回的就是推荐频道的)
+          const { data: { data } } = await getChannels()
+          channels = data.channels
+        }
       }
-      // 将数据更新到视图中
       this.channels = channels
     }
   }
