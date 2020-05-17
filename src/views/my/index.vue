@@ -85,7 +85,9 @@ export default {
     ...mapState(['user'])
   },
   created () {
-    this.loaderCurrentUser()
+    if (this.user) {
+      this.loaderCurrentUser()
+    }
   },
   methods: {
     // 加载当前个人信息
