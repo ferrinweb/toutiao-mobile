@@ -4,6 +4,7 @@
     icon="search"
     :title="suggestion"
     :key="index"
+    @click="$emit('search', suggestion)"
     v-for="(suggestion, index) in suggestionList"
     >
     <div slot="title" v-html="hilight(suggestion)"></div>
@@ -45,6 +46,7 @@ export default {
     }
   },
   methods: {
+    // 处理搜索关键字高亮
     hilight (suggestion) {
       const reg = new RegExp(this.searchText, 'gi')
       const activedText = `<span style="color:red">${this.searchText}</span>`

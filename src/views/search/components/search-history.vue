@@ -7,13 +7,23 @@
       </div>
       <!-- <div><van-icon name="delete" /></div> -->
     </van-cell>
-    <van-cell title="搜索历史" />
+    <van-cell
+    :title="history"
+    :key="index"
+    v-for="(history, index) in searchHistorys"
+    />
   </div>
 </template>
 
 <script>
 export default {
-  name: 'SearchHistory'
+  name: 'SearchHistory',
+  props: {
+    searchHistorys: {
+      type: Array,
+      required: true
+    }
+  }
 }
 </script>
 

@@ -18,3 +18,10 @@ export const getSearchSuggestions = q => {
     }
   })
 }
+// 获取搜索历史的接口
+export const getSearchHistories = () => {
+  return request({
+    method: 'GET',
+    url: '/app/v1_0/search/histories'
+  })
+}
