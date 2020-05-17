@@ -7,6 +7,7 @@
     class="search"
     placeholder="请输入搜索关键词"
     @search="isResultShow = true"
+    @focus="isResultShow = false"
     @cancel="$router.back()"
     />
     <!-- 搜索结果列表 -->
@@ -17,6 +18,7 @@
     <!-- 搜索建议列表 -->
     <search-suggestion
     v-else-if="searchText"
+    :search-text="searchText"
     />
     <!-- 搜索历史列表 -->
     <search-history
