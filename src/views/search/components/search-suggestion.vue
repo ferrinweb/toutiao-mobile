@@ -5,7 +5,9 @@
     :title="suggestion"
     :key="index"
     v-for="(suggestion, index) in suggestionList"
-    />
+    >
+    <div slot="title" v-html="hilight(suggestion)"></div>
+    </van-cell>
   </div>
 </template>
 
@@ -43,6 +45,11 @@ export default {
     }
   },
   methods: {
+    hilight (suggestion) {
+      const reg = new RegExp(this.searchText, 'gi')
+      const activedText = `<span style="color:red">${this.searchText}</span>`
+      return suggestion.replace(reg, activedText)
+    }
   }
 }
 </script>
