@@ -9,6 +9,7 @@
         size="small"
         type="info"
         slot="title"
+        to="/search"
         class="search-btn"
       >
       <van-icon name="search" />
