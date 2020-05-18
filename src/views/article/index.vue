@@ -24,9 +24,11 @@
     <van-button
       :type="article.is_followed ? 'default' : 'info'"
       :icon="article.is_followed ? '' : 'plus'"
+      :loading="isFollowLoading"
       size="small"
       round
       class="to-fan-btn"
+      @click="onFollow"
       >{{article.is_followed ? '已关注' : '关注'}}</van-button>
     </van-cell>
     <!-- 正文内容 -->
@@ -37,11 +39,13 @@
 <script>
 import { ImagePreview } from 'vant'
 import { getArticle } from '@/api/article'
+import { toFollow, offFollow } from '@/api/user'
 export default {
   name: 'ArticleIndex',
   data () {
     return {
-      article: {} // 根据id获取到文章详情
+      article: {}, // 根据id获取到文章详情
+      isFollowLoading: false
     }
   },
   props: {
@@ -54,6 +58,7 @@ export default {
     this.loadArticle()
   },
   methods: {
+    // 加载文章详情
     async loadArticle () {
       const { data: { data } } = await getArticle(this.articleId)
       // console.log(data)
@@ -63,6 +68,7 @@ export default {
         this.onPreviewImg()
       })
     },
+    // 预览正文图片
     onPreviewImg () {
       const articleContent = this.$refs['article-content']
       const imgs = articleContent.querySelectorAll('img')
@@ -77,6 +83,20 @@ export default {
           })
         }
       })
+    },
+    // 关注文章作者
+    async onFollow () {
+      this.isFollowLoading = true
+      if (this.article.is_followed) {
+        // 如果关注了那就取消关注
+        await offFollow(this.article.aut_id)
+      } else {
+        // 如果没关注就添加关注
+        await toFollow(this.article.aut_id)
+      }
+      // 服务器数据更新了,那么视图也应该更新
+      this.article.is_followed = !this.article.is_followed
+      this.isFollowLoading = false
     }
   }
 }
@@ -111,7 +131,7 @@ export default {
   }
   .markdown-body{
     position: fixed;
-    top: 46px;
+    top: 175px;
     left: 0;
     right: 0;
     bottom: 0;

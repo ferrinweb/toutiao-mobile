@@ -31,3 +31,20 @@ export const getChannels = () => {
     url: '/app/v1_0/user/channels'
   })
 }
+// 关注用户
+export const toFollow = authorId => {
+  return request({
+    method: 'POST',
+    url: '/app/v1_0/user/followings',
+    data: {
+      target: authorId
+    }
+  })
+}
+// 取消关注用户
+export const offFollow = authorId => {
+  return request({
+    method: 'DELETE',
+    url: `/app/v1_0/user/followings/${authorId}`
+  })
+}
