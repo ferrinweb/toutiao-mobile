@@ -7,7 +7,8 @@
       class="nav-bar"
       @click-left="$router.back()"
     />
-    <h1 class="title">{{article.title}}</h1>
+    <div class="article-wrap">
+      <h1 class="title">{{article.title}}</h1>
     <!-- 用户信息 -->
     <van-cell
     center
@@ -33,6 +34,9 @@
     </van-cell>
     <!-- 正文内容 -->
     <div ref="article-content" v-html="article.content" class="markdown-body"></div>
+    <!-- 文章评论列表组件 -->
+    <comment-list :article-id="articleId"></comment-list>
+    </div>
     <!-- 底部区域 -->
     <div class="article-bottom">
       <van-button
@@ -62,6 +66,7 @@
 </template>
 
 <script>
+import CommentList from './components/comment-list'
 import { ImagePreview } from 'vant'
 import {
   getArticle,
@@ -79,6 +84,7 @@ export default {
       isFollowLoading: false // 控制关注按钮的loading
     }
   },
+  components: { CommentList },
   props: {
     articleId: {
       type: [String, Number, Object],
@@ -166,11 +172,20 @@ export default {
 
 <style scoped lang="less">
 .article-container{
+  background-color: #ffffff;
   .title{
     padding: 24px 24px 14px 14px;
     font-size: 20px;
     background: #ffffff;
     margin: 0;
+  }
+  .article-wrap{
+    position: fixed;
+    top: 46px;
+    left: 0;
+    right: 0;
+    bottom: 44px;
+    overflow-y: scroll;
   }
   .author-info-wrap{
     .avatar{
@@ -192,12 +207,6 @@ export default {
     }
   }
   .markdown-body{
-    position: fixed;
-    top: 175px;
-    left: 0;
-    right: 0;
-    bottom: 44px;
-    overflow-y: scroll;
     padding: 14px;
     background: #ffffff;
   }
