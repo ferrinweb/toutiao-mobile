@@ -25,6 +25,8 @@
     <search-history
     v-else
     :search-historys="searchHistorys"
+    @search="onSearch"
+    @update-histories="searchHistorys=$event"
     />
   </div>
 </template>
@@ -35,7 +37,7 @@ import SearchSuggestion from './components/search-suggestion'
 import SearchHistory from './components/search-history'
 import { setItem, getItem } from '@/utils/storage'
 import { mapState } from 'vuex'
-import { getSearchHistories } from '@/api/search'
+// import { getSearchHistories } from '@/api/search'
 export default {
   name: 'SearchIndex',
   data () {
@@ -52,6 +54,12 @@ export default {
   created () {
     this.loadHistories()
   },
+  watch: {
+    // 监听searchHistorys的变化,数据一发生变化即触发
+    searchHistorys () {
+      setItem('search-historys', this.searchHistorys)
+    }
+  },
   methods: {
     onSearch (searchText) {
       // 搜索的时候
@@ -64,19 +72,20 @@ export default {
       }
       // 将搜索的内容放到历史记录数组的最前项
       this.searchHistorys.unshift(searchText)
-      // 将输入框的值存储到本地
-      setItem('search-historys', this.searchHistorys)
+      // 将输入框的值存储到本地,在监听器中做统一处理,searchHistorys一发生变化则存储到本地
+      // setItem('search-historys', this.searchHistorys)
       // 展示搜索结果
       this.isResultShow = true
     },
     async loadHistories () {
       // 获取搜索历史记录
-      let searchHistorys = getItem('search-historys') || []
-      if (this.user) {
-        // 如果用户登录了,那么请求获取线上的历史记录并且和本地的数据合并
-        const { data } = await getSearchHistories()
-        searchHistorys = [...new Set([...searchHistorys, ...data.data.keywords])]
-      }
+      const searchHistorys = getItem('search-historys') || []
+      // 这里不获取线上历史记录了,统一从本地获取
+      // if (this.user) {
+      //   // 如果用户登录了,那么请求获取线上的历史记录并且和本地的数据合并
+      //   const { data } = await getSearchHistories()
+      //   searchHistorys = [...new Set([...searchHistorys, ...data.data.keywords])]
+      // }
       this.searchHistorys = searchHistorys
     }
   }
