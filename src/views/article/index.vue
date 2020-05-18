@@ -30,11 +30,12 @@
       >{{article.is_followed ? '已关注' : '关注'}}</van-button>
     </van-cell>
     <!-- 正文内容 -->
-    <div v-html="article.content" class="markdown-body"></div>
+    <div ref="article-content" v-html="article.content" class="markdown-body"></div>
   </div>
 </template>
 
 <script>
+import { ImagePreview } from 'vant'
 import { getArticle } from '@/api/article'
 export default {
   name: 'ArticleIndex',
@@ -57,6 +58,25 @@ export default {
       const { data: { data } } = await getArticle(this.articleId)
       // console.log(data)
       this.article = data
+      // 在数据变化之后拿到dom使用$nextTick函数
+      this.$nextTick(() => {
+        this.onPreviewImg()
+      })
+    },
+    onPreviewImg () {
+      const articleContent = this.$refs['article-content']
+      const imgs = articleContent.querySelectorAll('img')
+      const imgPath = []
+      // 循环遍历每一个img元素,并且注册点击事件
+      imgs.forEach((img, index) => {
+        imgPath.push(img.src)
+        img.onclick = function () {
+          ImagePreview({
+            images: imgPath,
+            startPosition: index
+          })
+        }
+      })
     }
   }
 }
