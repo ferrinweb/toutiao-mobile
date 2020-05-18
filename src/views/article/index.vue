@@ -33,19 +33,50 @@
     </van-cell>
     <!-- 正文内容 -->
     <div ref="article-content" v-html="article.content" class="markdown-body"></div>
+    <!-- 底部区域 -->
+    <div class="article-bottom">
+      <van-button
+        round
+        class="comment-btn"
+        type="default"
+        size="small"
+        >写评论</van-button>
+        <van-icon
+          name="comment-o"
+          info="123"
+          color="#777"
+        />
+        <van-icon
+          :color="article.is_collected ? 'orange' : '#777'"
+          :name="article.is_collected ? 'star' : 'star-o'"
+          @click="onCollect"
+        />
+        <van-icon
+          :color="article.attitude === 1 ? 'hotpink' : '#777'"
+          :name="article.attitude === 1 ? 'good-job' : 'good-job-o'"
+          @click="onLike"
+        />
+        <van-icon name="share" color="#777777"></van-icon>
+    </div>
   </div>
 </template>
 
 <script>
 import { ImagePreview } from 'vant'
-import { getArticle } from '@/api/article'
+import {
+  getArticle,
+  collectArticle,
+  deleteCollectArticle,
+  zanArticle,
+  deleteZanArticle
+} from '@/api/article'
 import { toFollow, offFollow } from '@/api/user'
 export default {
   name: 'ArticleIndex',
   data () {
     return {
       article: {}, // 根据id获取到文章详情
-      isFollowLoading: false
+      isFollowLoading: false // 控制关注按钮的loading
     }
   },
   props: {
@@ -97,6 +128,37 @@ export default {
       // 服务器数据更新了,那么视图也应该更新
       this.article.is_followed = !this.article.is_followed
       this.isFollowLoading = false
+    },
+    // 收藏文章
+    async onCollect () {
+      this.$toast.loading({
+        message: '操作中...',
+        forbidClick: true // 禁止背景点击
+      })
+      if (this.article.is_collected) {
+        await deleteCollectArticle(this.articleId)
+      } else {
+        await collectArticle(this.articleId)
+      }
+      this.article.is_collected = !this.article.is_collected
+      this.$toast.success(this.article.is_collected ? '收藏成功' : '取消收藏成功')
+    },
+    // 点赞文章
+    async onLike () {
+      this.$toast.loading({
+        message: '操作中...',
+        forbidClick: true // 禁止背景点击
+      })
+      if (this.article.attitude === 1) {
+        // 如果点赞了那么取消点赞,并且添加数据
+        await deleteZanArticle(this.articleId)
+        this.article.attitude = -1
+      } else {
+        // 如果没有点赞那么请求添加点赞,并且更新数据
+        await zanArticle(this.articleId)
+        this.article.attitude = 1
+      }
+      this.$toast.success(this.article.attitude === 1 ? '点赞成功' : '取消点赞成功')
     }
   }
 }
@@ -134,10 +196,29 @@ export default {
     top: 175px;
     left: 0;
     right: 0;
-    bottom: 0;
+    bottom: 44px;
     overflow-y: scroll;
     padding: 14px;
     background: #ffffff;
+  }
+  .article-bottom{
+    position: fixed;
+    height: 44px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 0 14px;
+    background: #ffffff;
+    border-top: 1px solid #d8d8d8;
+    .comment-btn{
+      width: 142px;
+      height: 21px;
+      font-size: 15px;
+      color: #aeaeae;
+    }
   }
 }
 </style>
