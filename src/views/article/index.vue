@@ -44,6 +44,7 @@
         class="comment-btn"
         type="default"
         size="small"
+        @click="isComentPopShow = true"
         >写评论</van-button>
         <van-icon
           name="comment-o"
@@ -62,10 +63,19 @@
         />
         <van-icon name="share" color="#777777"></van-icon>
     </div>
+    <!-- 弹出层 -->
+    <van-popup
+      v-model="isComentPopShow"
+      position="bottom"
+    >
+    <!-- 发布评论组件 -->
+    <post-comment />
+    </van-popup>
   </div>
 </template>
 
 <script>
+import PostComment from './components/post-comment'
 import CommentList from './components/comment-list'
 import { ImagePreview } from 'vant'
 import {
@@ -81,10 +91,11 @@ export default {
   data () {
     return {
       article: {}, // 根据id获取到文章详情
-      isFollowLoading: false // 控制关注按钮的loading
+      isFollowLoading: false, // 控制关注按钮的loading
+      isComentPopShow: false // 评论的弹层显示状态
     }
   },
-  components: { CommentList },
+  components: { CommentList, PostComment },
   props: {
     articleId: {
       type: [String, Number, Object],
