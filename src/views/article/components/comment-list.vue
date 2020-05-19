@@ -1,17 +1,20 @@
 <template>
   <div class="comment-container">
+    <van-cell title="全部评论" />
     <van-list
       v-model="loading"
       :finished="finished"
       finished-text="没有更多了"
       @load="onLoad"
     >
-      <van-cell v-for="(comment, index) in list" :key="index" :title="comment.content" />
+      <comment-item :comment="comment" v-for="(comment, index) in list" :key="index" />
+      <!-- <van-cell v-for="(comment, index) in list" :key="index" :title="comment.content" /> -->
     </van-list>
   </div>
 </template>
 
 <script>
+import CommentItem from './comment-item'
 import { getComments } from '@/api/comment'
 export default {
   name: 'CommentList',
@@ -24,6 +27,7 @@ export default {
       limit: 10 // 每页数据
     }
   },
+  components: { CommentItem },
   props: {
     articleId: {
       type: [String, Number, Object],
@@ -42,7 +46,7 @@ export default {
         offset: this.offset,
         limit: this.limit
       })
-      console.log(data)
+      // console.log(data)
       // 数据展示
       this.list.push(...data.results)
       // 关闭loading
