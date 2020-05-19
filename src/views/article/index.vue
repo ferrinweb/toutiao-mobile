@@ -9,33 +9,37 @@
     />
     <div class="article-wrap">
       <h1 class="title">{{article.title}}</h1>
-    <!-- 用户信息 -->
-    <van-cell
-    center
-    class="author-info-wrap"
-    >
-    <van-image
-      slot="icon"
-      round
-      class="avatar"
-      :src="article.aut_photo"
-    />
-    <div slot="title" class="autor-name">{{article.aut_name}}</div>
-    <div slot="label" class="pubdate">{{article.pubdate}}</div>
-    <van-button
-      :type="article.is_followed ? 'default' : 'info'"
-      :icon="article.is_followed ? '' : 'plus'"
-      :loading="isFollowLoading"
-      size="small"
-      round
-      class="to-fan-btn"
-      @click="onFollow"
-      >{{article.is_followed ? '已关注' : '关注'}}</van-button>
-    </van-cell>
-    <!-- 正文内容 -->
-    <div ref="article-content" v-html="article.content" class="markdown-body"></div>
-    <!-- 文章评论列表组件 -->
-    <comment-list :article-id="articleId" :list="commentList"></comment-list>
+      <!-- 用户信息 -->
+      <van-cell
+      center
+      class="author-info-wrap"
+      >
+      <van-image
+        slot="icon"
+        round
+        class="avatar"
+        :src="article.aut_photo"
+      />
+      <div slot="title" class="autor-name">{{article.aut_name}}</div>
+      <div slot="label" class="pubdate">{{article.pubdate}}</div>
+      <van-button
+        :type="article.is_followed ? 'default' : 'info'"
+        :icon="article.is_followed ? '' : 'plus'"
+        :loading="isFollowLoading"
+        size="small"
+        round
+        class="to-fan-btn"
+        @click="onFollow"
+        >{{article.is_followed ? '已关注' : '关注'}}</van-button>
+      </van-cell>
+      <!-- 正文内容 -->
+      <div ref="article-content" v-html="article.content" class="markdown-body"></div>
+      <!-- 文章评论列表组件 -->
+      <comment-list
+        :article-id="articleId"
+        :list="commentList"
+        @com-total-count="commentTotalCount = $event"
+      />
     </div>
     <!-- 底部区域 -->
     <div class="article-bottom">
@@ -48,7 +52,7 @@
         >写评论</van-button>
         <van-icon
           name="comment-o"
-          info="123"
+          :info="commentTotalCount"
           color="#777"
         />
         <van-icon
@@ -93,7 +97,8 @@ export default {
       article: {}, // 根据id获取到文章详情
       isFollowLoading: false, // 控制关注按钮的loading
       isComentPopShow: false, // 评论的弹层显示状态
-      commentList: []
+      commentList: [], // 评论列表
+      commentTotalCount: 0
     }
   },
   components: { CommentList, PostComment },

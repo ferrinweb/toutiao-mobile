@@ -40,20 +40,21 @@ export default {
   methods: {
     async onLoad () {
       // 异步更新数据
-      const { data: { data } } = await getComments({
+      const { data } = await getComments({
         type: 'a',
         source: this.articleId,
         offset: this.offset,
         limit: this.limit
       })
-      // console.log(data)
+      console.log(data)
       // 数据展示
-      this.list.push(...data.results)
+      this.list.push(...data.data.results)
+      this.$emit('com-total-count', data.data.total_count)
       // 关闭loading
       this.loading = false
       // 判断数据是否加载完
       if (data.results) {
-        this.offset = data.last_id
+        this.offset = data.data.last_id
       } else {
         this.finished = true
       }
