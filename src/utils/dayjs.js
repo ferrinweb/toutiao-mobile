@@ -14,6 +14,11 @@ dayjs.extend(relativeTime)
 dayjs.locale('zh-cn') // 全局使用
 
 // 配置全局过滤器函数
+// 配置相对时间
 Vue.filter('relativeTime', value => {
   return dayjs(value).from(dayjs())
+})
+// 配置一定格式得时间
+Vue.filter('formatT', value => {
+  return dayjs(value).format('YYYY-MM-DD HH:mm:ss')
 })

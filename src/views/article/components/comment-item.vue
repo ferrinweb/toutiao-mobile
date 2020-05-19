@@ -20,7 +20,7 @@
         </div>
         <div class="user-content">{{comment.content}}</div>
         <div class="bottom-wrap">
-          <span class="pubtime">{{comment.pubdate}}</span>
+          <span class="pubtime">{{comment.pubdate | formatT}}</span>
           <!-- 回复按钮图标 -->
           <van-button
             type="default"
