@@ -20,7 +20,6 @@ export default {
   name: 'CommentList',
   data () {
     return {
-      list: [],
       loading: false,
       finished: false,
       offset: null,
@@ -32,10 +31,11 @@ export default {
     articleId: {
       type: [String, Number, Object],
       required: true
+    },
+    list: {
+      type: Array,
+      default: () => []
     }
-  },
-  created () {
-    // this.loadComments()
   },
   methods: {
     async onLoad () {

@@ -35,7 +35,7 @@
     <!-- 正文内容 -->
     <div ref="article-content" v-html="article.content" class="markdown-body"></div>
     <!-- 文章评论列表组件 -->
-    <comment-list :article-id="articleId"></comment-list>
+    <comment-list :article-id="articleId" :list="commentList"></comment-list>
     </div>
     <!-- 底部区域 -->
     <div class="article-bottom">
@@ -69,7 +69,7 @@
       position="bottom"
     >
     <!-- 发布评论组件 -->
-    <post-comment />
+    <post-comment :target="articleId" @post-success="postSuccess" />
     </van-popup>
   </div>
 </template>
@@ -92,7 +92,8 @@ export default {
     return {
       article: {}, // 根据id获取到文章详情
       isFollowLoading: false, // 控制关注按钮的loading
-      isComentPopShow: false // 评论的弹层显示状态
+      isComentPopShow: false, // 评论的弹层显示状态
+      commentList: []
     }
   },
   components: { CommentList, PostComment },
@@ -176,6 +177,10 @@ export default {
         this.article.attitude = 1
       }
       this.$toast.success(this.article.attitude === 1 ? '点赞成功' : '取消点赞成功')
+    },
+    postSuccess (comment) {
+      this.commentList.unshift(comment)
+      this.isComentPopShow = false
     }
   }
 }

@@ -24,3 +24,11 @@ export const deleteCommentLike = commentId => {
     url: `/app/v1_0/comment/likings/${commentId}`
   })
 }
+// 添加评论或回复评论的接口
+export const addComment = data => {
+  return request({
+    method: 'POST',
+    url: '/app/v1_0/comments',
+    data
+  })
+}
