@@ -36,7 +36,7 @@
       <div ref="article-content" v-html="article.content" class="markdown-body"></div>
       <!-- 文章评论列表组件 -->
       <comment-list
-        :article-id="articleId"
+        :source="articleId"
         :list="commentList"
         @com-total-count="commentTotalCount = $event"
         @reply-comment="onReplyClick"
@@ -82,7 +82,7 @@
       position="bottom"
     >
     <!-- 回复评论组件 -->
-    <comment-reply />
+    <comment-reply :comment="currentComment" @close="isReplyPopShow = false" />
     </van-popup>
   </div>
 </template>
@@ -109,7 +109,8 @@ export default {
       isComentPopShow: false, // 评论的弹层显示状态
       commentList: [], // 评论列表
       commentTotalCount: 0, // 评论总数
-      isReplyPopShow: false // 控制回复评论显示隐藏
+      isReplyPopShow: false, // 控制回复评论显示隐藏
+      currentComment: {} // 点击回复的当前评论项
     }
   },
   components: { CommentList, PostComment, CommentReply },
@@ -202,6 +203,7 @@ export default {
     // 回复评论
     onReplyClick (comment) {
       this.isReplyPopShow = true
+      this.currentComment = comment
     }
   }
 }

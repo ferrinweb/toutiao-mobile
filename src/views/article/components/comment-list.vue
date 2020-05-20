@@ -33,9 +33,14 @@ export default {
   },
   components: { CommentItem },
   props: {
-    articleId: {
+    // 如果获取文章评论则传递文章Id如果获取评论回复,则传递评论Id
+    source: {
       type: [String, Number, Object],
       required: true
+    },
+    type: {
+      type: String,
+      default: 'a'
     },
     list: {
       type: Array,
@@ -46,8 +51,8 @@ export default {
     async onLoad () {
       // 异步更新数据
       const { data } = await getComments({
-        type: 'a',
-        source: this.articleId,
+        type: this.type,
+        source: this.source.toString(),
         offset: this.offset,
         limit: this.limit
       })

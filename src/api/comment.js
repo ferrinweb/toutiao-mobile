@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-// 获取评论的接口
+// 获取评论或获取评论回复的接口
 export const getComments = params => {
   return request({
     method: 'GET',
