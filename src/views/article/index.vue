@@ -82,7 +82,12 @@
       position="bottom"
     >
     <!-- 回复评论组件 -->
-    <comment-reply :comment="currentComment" @close="isReplyPopShow = false" />
+    <comment-reply
+      v-if="isReplyPopShow"
+      :article-id="articleId"
+      :comment="currentComment"
+      @close="isReplyPopShow = false"
+    />
     </van-popup>
   </div>
 </template>
