@@ -39,6 +39,7 @@
         :article-id="articleId"
         :list="commentList"
         @com-total-count="commentTotalCount = $event"
+        @reply-comment="onReplyClick"
       />
     </div>
     <!-- 底部区域 -->
@@ -67,7 +68,7 @@
         />
         <van-icon name="share" color="#777777"></van-icon>
     </div>
-    <!-- 弹出层 -->
+    <!-- 写评论弹出层 -->
     <van-popup
       v-model="isComentPopShow"
       position="bottom"
@@ -75,10 +76,19 @@
     <!-- 发布评论组件 -->
     <post-comment :target="articleId" @post-success="postSuccess" />
     </van-popup>
+    <!-- 回复评论弹出层 -->
+    <van-popup
+      v-model="isReplyPopShow"
+      position="bottom"
+    >
+    <!-- 回复评论组件 -->
+    <comment-reply />
+    </van-popup>
   </div>
 </template>
 
 <script>
+import CommentReply from './components/comment-reply'
 import PostComment from './components/post-comment'
 import CommentList from './components/comment-list'
 import { ImagePreview } from 'vant'
@@ -98,10 +108,11 @@ export default {
       isFollowLoading: false, // 控制关注按钮的loading
       isComentPopShow: false, // 评论的弹层显示状态
       commentList: [], // 评论列表
-      commentTotalCount: 0
+      commentTotalCount: 0, // 评论总数
+      isReplyPopShow: false // 控制回复评论显示隐藏
     }
   },
-  components: { CommentList, PostComment },
+  components: { CommentList, PostComment, CommentReply },
   props: {
     articleId: {
       type: [String, Number, Object],
@@ -183,9 +194,14 @@ export default {
       }
       this.$toast.success(this.article.attitude === 1 ? '点赞成功' : '取消点赞成功')
     },
+    // 发布评论成功
     postSuccess (comment) {
       this.commentList.unshift(comment)
       this.isComentPopShow = false
+    },
+    // 回复评论
+    onReplyClick (comment) {
+      this.isReplyPopShow = true
     }
   }
 }

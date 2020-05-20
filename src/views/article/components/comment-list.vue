@@ -7,7 +7,12 @@
       finished-text="没有更多了"
       @load="onLoad"
     >
-      <comment-item :comment="comment" v-for="(comment, index) in list" :key="index" />
+      <comment-item
+        :comment="comment"
+        v-for="(comment, index) in list"
+        :key="index"
+        @reply-comment="$emit('reply-comment', $event)"
+      />
       <!-- <van-cell v-for="(comment, index) in list" :key="index" :title="comment.content" /> -->
     </van-list>
   </div>
@@ -46,7 +51,7 @@ export default {
         offset: this.offset,
         limit: this.limit
       })
-      console.log(data)
+      // console.log(data)
       // 数据展示
       this.list.push(...data.data.results)
       this.$emit('com-total-count', data.data.total_count)
