@@ -20,26 +20,47 @@
     is-link
     @click="isEditUsernameShow = true"
   />
-  <van-cell title="性别" :value="user.gender === 0 ? '男' : '女'" is-link />
+  <van-cell
+    title="性别"
+    :value="user.gender === 0 ? '男' : '女'"
+    is-link
+    @click="isEditGenderShow = true"
+  />
   <van-cell title="生日" :value="user.birthday" is-link />
-  <!-- 用户名弹层 -->
+  <!-- 修改用户名弹层 -->
   <van-popup
     v-model="isEditUsernameShow"
     position="bottom"
     :style="{ height: '100%' }"
     class="edit-name-pop"
   >
-  <!-- 编辑用户个人信息弹层 -->
+  <!-- 编辑用户名组件 -->
     <edit-username
+      v-if="isEditUsernameShow"
       v-model="user.name"
       @update-name="user.name = $event"
       @close="isEditUsernameShow = false"
+    />
+  </van-popup>
+  <!-- 修改用户性别弹层 -->
+  <van-popup
+    v-model="isEditGenderShow"
+    position="bottom"
+    class="edit-gender-pop"
+  >
+  <!-- 编辑用户性别组件 -->
+    <edit-gender
+      v-if="isEditGenderShow"
+      v-model="user.gender"
+      @update-gender="user.gender = $event"
+      @close="isEditGenderShow = false"
     />
   </van-popup>
   </div>
 </template>
 
 <script>
+import EditGender from './components/edit-gender'
 import EditUsername from './components/edit-username'
 import { getUserProfile } from '@/api/user'
 export default {
@@ -47,10 +68,11 @@ export default {
   data () {
     return {
       user: {}, // 用户个人信息
-      isEditUsernameShow: false
+      isEditUsernameShow: false, // 编辑用户名弹层是否显示
+      isEditGenderShow: false // 编辑用户性别弹层是否显示
     }
   },
-  components: { EditUsername },
+  components: { EditUsername, EditGender },
   created () {
     this.loaderUserProfile()
   },
