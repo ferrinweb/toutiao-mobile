@@ -20,6 +20,7 @@
         size="small"
         :round="true"
         class="edit-btn"
+        to="/user/profile"
         >
         编辑资料
         </van-button>
