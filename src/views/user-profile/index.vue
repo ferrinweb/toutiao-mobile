@@ -11,7 +11,7 @@
     type="file"
     ref="file"
     hidden
-    @change="isEditAvatarShow = true"
+    @change="onFileChange"
   >
   <!-- 用户头像部分 -->
   <van-cell title="头像" is-link center>
@@ -39,7 +39,7 @@
     title="生日"
     :value="user.birthday"
     is-link
-    @click="isEditBirthday = true"
+    @click="isEditBirthdayShow = true"
   />
   <!-- 修改用户名弹层 -->
   <van-popup
@@ -84,12 +84,15 @@
   <van-popup
     v-model="isEditAvatarShow"
     position="bottom"
+    :style="{ height: '100%' }"
+    class="edit-avatar-pop"
   >
   <!-- 编辑用户头像组件 -->
     <edit-avatar
       v-if="isEditAvatarShow"
-      :photo="user.photo"
+      :file="file"
       @close="isEditAvatarShow = false"
+      @update-avatar="user.photo = $event"
     />
   </van-popup>
   </div>
@@ -109,7 +112,8 @@ export default {
       isEditUsernameShow: false, // 编辑用户名弹层是否显示
       isEditGenderShow: false, // 编辑用户性别弹层是否显示
       isEditBirthdayShow: false, // 编辑用户生日弹层是否显示
-      isEditAvatarShow: false // 编辑用户头像弹层是否显示
+      isEditAvatarShow: false, // 编辑用户头像弹层是否显示
+      file: null // 文件对象
     }
   },
   components: { EditUsername, EditGender, EditBirthday, EditAvatar },
@@ -121,6 +125,14 @@ export default {
       const { data } = await getUserProfile()
       // console.log(data)
       this.user = data.data
+    },
+    // 当文件域改变的时候
+    onFileChange () {
+      this.isEditAvatarShow = true
+      // 拿到文件对象
+      this.file = this.$refs.file.files[0]
+      // 清空文件域
+      this.$refs.file.value = ''
     }
   }
 }
@@ -135,6 +147,10 @@ export default {
   // 用户名修改弹层
   .edit-name-pop{
     background-color: #f5f7f9;
+  }
+  // 编辑头像的弹层
+  .edit-avatar-pop{
+    background-color: #000;
   }
 }
 </style>
