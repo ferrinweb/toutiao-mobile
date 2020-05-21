@@ -38,7 +38,6 @@
     <edit-username
       v-if="isEditUsernameShow"
       v-model="user.name"
-      @update-name="user.name = $event"
       @close="isEditUsernameShow = false"
     />
   </van-popup>
@@ -52,7 +51,6 @@
     <edit-gender
       v-if="isEditGenderShow"
       v-model="user.gender"
-      @update-gender="user.gender = $event"
       @close="isEditGenderShow = false"
     />
   </van-popup>

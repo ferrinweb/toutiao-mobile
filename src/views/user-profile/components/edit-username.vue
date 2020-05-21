@@ -51,7 +51,7 @@ export default {
         })
         console.log(data)
         // 修改成功发送事件给父组件更新昵称,并且关闭弹层
-        this.$emit('update-name', data.data.name)
+        this.$emit('input', data.data.name)
         this.$emit('close')
         this.$toast.success('修改成功')
       } catch (err) {

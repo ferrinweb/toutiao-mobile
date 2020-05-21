@@ -7,11 +7,13 @@
       :default-index="genderIndex"
       @confirm="onConfirm"
       @cancel="$emit('close')"
+      @change="onChange"
     />
   </div>
 </template>
 
 <script>
+import { editUserProfile } from '@/api/user'
 export default {
   name: 'EditGender',
   data () {
@@ -27,8 +29,23 @@ export default {
     }
   },
   methods: {
-    onConfirm () {
-      console.log('onConfirm')
+    // 确认修改
+    async onConfirm () {
+      this.$toast.loading({
+        message: '修改中...',
+        forbidClick: true
+      })
+      const { data } = await editUserProfile({
+        gender: this.genderIndex
+      })
+      this.$emit('close')
+      this.$emit('input', this.genderIndex)
+      console.log(data)
+      this.$toast.success('修改成功')
+    },
+    // 当值改变的时候
+    onChange (picker, value, index) {
+      this.genderIndex = index
     }
   }
 }
