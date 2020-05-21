@@ -31,6 +31,8 @@
   >
   <!-- 编辑用户个人信息弹层 -->
     <edit-username
+      v-model="user.name"
+      @update-name="user.name = $event"
       @close="isEditUsernameShow = false"
     />
   </van-popup>
