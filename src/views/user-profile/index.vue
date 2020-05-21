@@ -26,7 +26,12 @@
     is-link
     @click="isEditGenderShow = true"
   />
-  <van-cell title="生日" :value="user.birthday" is-link />
+  <van-cell
+    title="生日"
+    :value="user.birthday"
+    is-link
+    @click="isEditBirthday = true"
+  />
   <!-- 修改用户名弹层 -->
   <van-popup
     v-model="isEditUsernameShow"
@@ -54,10 +59,23 @@
       @close="isEditGenderShow = false"
     />
   </van-popup>
+  <!-- 修改用户生日组件 -->
+  <van-popup
+    v-model="isEditBirthday"
+    position="bottom"
+  >
+  <!-- 编辑用户性别组件 -->
+    <edit-birthday
+      v-if="isEditBirthday"
+      v-model="user.birthday"
+      @close="isEditBirthday = false"
+    />
+  </van-popup>
   </div>
 </template>
 
 <script>
+import EditBirthday from './components/edit-birthday'
 import EditGender from './components/edit-gender'
 import EditUsername from './components/edit-username'
 import { getUserProfile } from '@/api/user'
@@ -67,10 +85,11 @@ export default {
     return {
       user: {}, // 用户个人信息
       isEditUsernameShow: false, // 编辑用户名弹层是否显示
-      isEditGenderShow: false // 编辑用户性别弹层是否显示
+      isEditGenderShow: false, // 编辑用户性别弹层是否显示
+      isEditBirthday: false // 编辑用户生日弹层是否显示
     }
   },
-  components: { EditUsername, EditGender },
+  components: { EditUsername, EditGender, EditBirthday },
   created () {
     this.loaderUserProfile()
   },
