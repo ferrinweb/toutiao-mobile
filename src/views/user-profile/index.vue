@@ -6,12 +6,21 @@
     class="nav-bar"
     @click-left="$router.back()"
   />
+  <!-- 选择图片文件域 -->
+  <input
+    type="file"
+    ref="file"
+    hidden
+    @change="isEditAvatarShow = true"
+  >
+  <!-- 用户头像部分 -->
   <van-cell title="头像" is-link center>
     <van-image
       fit="cover"
       round
       class="user-avatar"
       :src="user.photo"
+      @click="$refs.file.click()"
     />
   </van-cell>
   <van-cell
@@ -59,22 +68,35 @@
       @close="isEditGenderShow = false"
     />
   </van-popup>
-  <!-- 修改用户生日组件 -->
+  <!-- 修改用户生日弹层 -->
   <van-popup
-    v-model="isEditBirthday"
+    v-model="isEditBirthdayShow"
     position="bottom"
   >
-  <!-- 编辑用户性别组件 -->
+  <!-- 编辑用户生日组件 -->
     <edit-birthday
-      v-if="isEditBirthday"
+      v-if="isEditBirthdayShow"
       v-model="user.birthday"
-      @close="isEditBirthday = false"
+      @close="isEditBirthdayShow = false"
+    />
+  </van-popup>
+  <!-- 修改用户头像弹层 -->
+  <van-popup
+    v-model="isEditAvatarShow"
+    position="bottom"
+  >
+  <!-- 编辑用户头像组件 -->
+    <edit-avatar
+      v-if="isEditAvatarShow"
+      :photo="user.photo"
+      @close="isEditAvatarShow = false"
     />
   </van-popup>
   </div>
 </template>
 
 <script>
+import EditAvatar from './components/edit-avatar'
 import EditBirthday from './components/edit-birthday'
 import EditGender from './components/edit-gender'
 import EditUsername from './components/edit-username'
@@ -86,10 +108,11 @@ export default {
       user: {}, // 用户个人信息
       isEditUsernameShow: false, // 编辑用户名弹层是否显示
       isEditGenderShow: false, // 编辑用户性别弹层是否显示
-      isEditBirthday: false // 编辑用户生日弹层是否显示
+      isEditBirthdayShow: false, // 编辑用户生日弹层是否显示
+      isEditAvatarShow: false // 编辑用户头像弹层是否显示
     }
   },
-  components: { EditUsername, EditGender, EditBirthday },
+  components: { EditUsername, EditGender, EditBirthday, EditAvatar },
   created () {
     this.loaderUserProfile()
   },
