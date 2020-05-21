@@ -48,3 +48,10 @@ export const offFollow = authorId => {
     url: `/app/v1_0/user/followings/${authorId}`
   })
 }
+// 获取用户个人信息的接口
+export const getUserProfile = () => {
+  return request({
+    method: 'GET',
+    url: '/app/v1_0/user/profile'
+  })
+}
